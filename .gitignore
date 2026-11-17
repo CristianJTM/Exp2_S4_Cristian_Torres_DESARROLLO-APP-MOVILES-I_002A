@@ -1,0 +1,62 @@
+# ---------------------------------------------------------------------------
+# PizzeriaApp — archivos que no se versionan
+# Lo versionado alcanza para compilar y ejecutar la app: gradle/, gradlew,
+# gradlew.bat, settings.gradle.kts, build.gradle.kts, gradle.properties,
+# app/, README.md y .gitignore.
+# ---------------------------------------------------------------------------
+
+# --- Gradle y artefactos de build ---
+.gradle/
+build/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# --- Android Studio / IntelliJ ---
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# --- Configuración local de cada máquina (rutas del SDK, firma) ---
+local.properties
+keystore.properties
+
+# --- Artefactos generados ---
+*.apk
+*.aab
+
+# --- Firma ---
+*.jks
+*.keystore
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Documentación: solo se versiona README.md ---
+*.md
+!README.md
+*.txt
+
+# --- Agentes, modelos y configuración de IA (no se usan para ejecutar) ---
+opencode.json
+AGENTS.md
+.opencode/
+.claude/
+CLAUDE.md
+.cursor/
+.cursorrules
+.windsurf/
+.aider*
+.continue/
+.codex/
+.gemini/
+GEMINI.md
+.mcp.json
+.github/copilot-instructions.md
+copilot-instructions.md
