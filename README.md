@@ -6,6 +6,11 @@ sistema de pizzería de consola de las semanas 1-3 a un proyecto Android.
 La pantalla principal muestra el saludo de bienvenida y un resumen generado por
 la lógica de dominio migrada (catálogo, promoción vigente y total de un pedido).
 
+## Estado
+
+Semana 4 completada: el proyecto compila (`./gradlew assembleDebug`) y corre en
+el emulador. El repositorio está publicado en GitHub, rama `main`.
+
 ## Requisitos
 
 - Android Studio con AGP 9.5.1, Gradle 9.6 y Kotlin 2.2.10.
@@ -37,11 +42,12 @@ Por línea de comandos:
 
 ```
 app/src/main/java/com/duoc/pizzeriaapp/
-├── MainActivity.kt   # UI Compose + datos de demostración
+├── MainActivity.kt   # UI Compose; los datos de demo vienen de DatosDemo
 ├── modelo/           # Cliente, Producto, Pizza, Combo, Bebida, Pedido,
 │                     # ItemPedido, EstadoPedido, CategoriaProducto,
 │                     # Usuario, Repartidor, Promocionable
-├── servicio/         # Catalogo, Inventario, Pizzeria, Promocion, Promociones
+├── servicio/         # Catalogo, Inventario, Pizzeria, Promocion, Promociones,
+│                     # DatosDemo (datos de demostración)
 └── utils/            # Constantes, SecuenciaPedidos, Vigencia, Calculos,
                       # Formato, Validaciones, Reflexion
 ```
