@@ -1,6 +1,5 @@
 package com.duoc.pizzeriaapp.utils
 
-import com.duoc.pizzeriaapp.modelo.Producto
 import java.util.Locale
 
 fun formatearMonto(monto: Double): String {
@@ -25,13 +24,3 @@ fun formatearTelefono(telefono: String): String? {
     }
 }
 
-fun Producto.detallarProducto(): String {
-    val detalleIngredientes: String = if (ingredientes.isEmpty()) {
-        "Sin ingredientes"
-    } else {
-        ingredientes.entries.joinToString { "${it.key} (${it.value})" }
-    }
-
-    return "$nombre - \$${formatearMonto(precio)} | " +
-        "Categoría: ${categoria.name.lowercase()} | Ingredientes: $detalleIngredientes"
-}
