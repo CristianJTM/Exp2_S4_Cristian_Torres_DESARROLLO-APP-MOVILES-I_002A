@@ -11,6 +11,9 @@ import com.duoc.pizzeriaapp.modelo.Repartidor
 // Datos de demostracion separados de la UI para mantener MainActivity enfocado en Compose.
 object DatosDemo {
 
+    // Instancia unica compartida: el ViewModel la consume, no la recrea.
+    val instancia: Pizzeria by lazy { crearPizzeria() }
+
     fun crearPizzeria(): Pizzeria {
         val catalogo: Catalogo = Catalogo()
 
