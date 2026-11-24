@@ -1,12 +1,6 @@
 package com.duoc.pizzeriaapp.utils
 
-import com.duoc.pizzeriaapp.modelo.ItemPedido
-
-// Nota: utils depende de modelo y modelo de utils; en un mismo módulo Kotlin no hay ciclo de compilación.
-fun calcularSubtotal(items: List<ItemPedido>): Double {
-    return items.sumOf { it.subtotal }
-}
-
+// Módulo puro: no depende del modelo. calcularSubtotal vive en :datos porque usa ItemPedido.
 fun correspondeDescuento(cantidadPizzas: Int): Boolean {
     return cantidadPizzas > UMBRAL_DESCUENTO_PIZZAS
 }

@@ -1,15 +1,19 @@
 # PizzeriaApp
 
-Aplicación Android (Kotlin + Jetpack Compose) de la **Semana 4**: migración del
-sistema de pizzería de consola de las semanas 1-3 a un proyecto Android.
+Aplicación Android (Kotlin + Jetpack Compose) de la **Semana 5**. Parte de la
+migración del sistema de pizzería de consola (semanas 1-3) a Android (semana 4)
+y ahora está separada en **módulos Gradle reales**.
 
-La pantalla principal muestra el saludo de bienvenida y un resumen generado por
-la lógica de dominio migrada (catálogo, promoción vigente y total de un pedido).
+La pantalla principal muestra el saludo de bienvenida y un **resumen dinámico**
+generado por la lógica de dominio: total de clientes registrados, total de
+pedidos realizados y nombre del último cliente registrado.
 
 ## Estado
 
-Semana 4 completada: el proyecto compila (`./gradlew assembleDebug`) y corre en
-el emulador. El repositorio está publicado en GitHub, rama `main`.
+Semana 5 completada: modularización en `:app`, `:datos`, `:ui` y `:utilidades`.
+El proyecto compila (`./gradlew assembleDebug`) y corre en el emulador. El
+repositorio está publicado en GitHub; esta entrega vive en la rama `semana5`
+(`main` conserva la entrega de la semana 4).
 
 ## Requisitos
 
@@ -34,27 +38,86 @@ Por línea de comandos:
 ## Qué muestra la pantalla
 
 - **Bienvenidos a la mejor pizzería de la ciudad** (función `Greeting`).
-- Cantidad de productos del catálogo y si la promoción está activa hoy.
-- Total de un pedido demo, calculado con descuentos e impuesto.
-- Promoción detectada con la anotación `@Promocionable` mediante reflexión.
+- **Clientes registrados**: total de clientes en la pizzería.
+- **Pedidos realizados**: total de pedidos registrados.
+- **Último cliente**: nombre del último cliente registrado.
 
-## Estructura
+El resumen lo arma un `ViewModel` de `:ui` que expone `LiveData`; la pantalla los
+observa con `observeAsState`, así que se actualiza sola si los datos cambian.
+La fuente de datos de demostración es `DatosDemo`, que registra 4 clientes y 2
+pedidos demo.
+
+## Estructura modular
 
 ```
-app/src/main/java/com/duoc/pizzeriaapp/
-├── MainActivity.kt   # UI Compose; los datos de demo vienen de DatosDemo
-├── modelo/           # Cliente, Producto, Pizza, Combo, Bebida, Pedido,
-│                     # ItemPedido, EstadoPedido, CategoriaProducto,
-│                     # Usuario, Repartidor, Promocionable
-├── servicio/         # Catalogo, Inventario, Pizzeria, Promocion, Promociones,
-│                     # DatosDemo (datos de demostración)
-└── utils/            # Constantes, SecuenciaPedidos, Vigencia, Calculos,
-                      # Formato, Validaciones, Reflexion
+PizzeriaApp/
+├── app/          # :app — host mínimo: MainActivity (tema + pantalla)
+├── utilidades/   # :utilidades — Kotlin/JVM puro
+├── datos/        # :datos — Kotlin/JVM puro
+└── ui/           # :ui — Android library con Compose
 ```
+
+Cadena de dependencias entre módulos:
+
+```
+:app  →  :ui  →  :datos  →  :utilidades
+```
+
+### `:utilidades` (Kotlin puro, sin Android)
+
+`utilidades/src/main/java/com/duoc/pizzeriaapp/utils/`
+
+- `Constantes.kt`, `SecuenciaPedidos.kt`, `Vigencia.kt`, `Calculos.kt`,
+  `Formato.kt`, `Validaciones.kt`, `Reflexion.kt`.
+- Solo lógica que **no depende del modelo**: constantes, cálculos, formateo,
+  validaciones y vigencia.
+
+### `:datos` (Kotlin puro, sin Android)
+
+`datos/src/main/java/com/duoc/pizzeriaapp/`
+
+- `modelo/` — Cliente, Producto, Pizza, Combo, Bebida, Pedido, ItemPedido,
+  EstadoPedido, CategoriaProducto, Usuario, Repartidor, Promocionable.
+- `servicio/` — Catalogo, Inventario, Pizzeria, Promocion, Promociones,
+  DatosDemo (fuente única de los datos de demostración).
+- `datos/DatosUtil.kt` — `calcularSubtotal` y `Producto.detallarProducto`,
+  utilidades que sí dependen del modelo. Se movieron aquí para evitar una
+  dependencia circular entre `:utilidades` y `:datos`.
+
+### `:ui` (Android library con Compose)
+
+`ui/src/main/java/com/duoc/pizzeriaapp/ui/`
+
+- `ResumenViewModel.kt` — expone `totalClientes`, `totalPedidos` y
+  `nombreUltimoCliente` como `LiveData`, leídos desde `DatosDemo`.
+- `ResumenScreen.kt` — pantalla Compose que observa el `ViewModel`
+  (`observeAsState`) e incluye el saludo `Greeting`.
+- `theme/` — Color, Theme y Type de Compose.
+
+Namespace propio del módulo: `com.duoc.pizzeriaapp.ui`.
+
+### `:app` (aplicación Android)
+
+`app/src/main/java/com/duoc/pizzeriaapp/`
+
+- `MainActivity.kt` — solo host: aplica el tema y monta `ResumenScreen` de
+  `:ui`. No contiene lógica de negocio ni crea datos.
+
+## Dependencias
+
+Las versiones se centralizan en `gradle/libs.versions.toml`. Además de lo de la
+semana 4 se agregaron: `lifecycle-viewmodel-ktx`, `lifecycle-livedata-ktx`,
+`lifecycle-viewmodel-compose`, `androidx.compose.runtime:runtime-livedata` y
+`kotlinx-coroutines` (core/android).
 
 ## Notas
 
 - Las clases de dominio no leen ni escriben en consola. Las funciones que antes
   pedían datos por teclado ahora reciben parámetros y devuelven `String`,
   `Boolean` o valores ya normalizados.
-- No se agregaron librerías externas: solo las dependencias estándar de Compose.
+- `:utilidades` y `:datos` son módulos Kotlin puros (JVM) porque modelo,
+  servicio y utils no dependen de `android.*` ni de Compose; solo `:ui` y
+  `:app` son módulos Android.
+- `DatosDemo` sigue siendo la fuente única de los datos de demostración. El
+  `ViewModel` de `:ui` la consume; no recrea datos.
+- Se requiere API 26+ en ejecución por el uso de `java.time.LocalDate`.

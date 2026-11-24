@@ -4,11 +4,9 @@ import com.duoc.pizzeriaapp.modelo.Bebida
 import com.duoc.pizzeriaapp.modelo.Cliente
 import com.duoc.pizzeriaapp.modelo.ComboPromocionable
 import com.duoc.pizzeriaapp.modelo.ItemPedido
-import com.duoc.pizzeriaapp.modelo.Pedido
 import com.duoc.pizzeriaapp.modelo.Pizza
 import com.duoc.pizzeriaapp.modelo.PizzaPromocionable
 import com.duoc.pizzeriaapp.modelo.Repartidor
-import com.duoc.pizzeriaapp.utils.SecuenciaPedidos
 
 // Datos de demostracion separados de la UI para mantener MainActivity enfocado en Compose.
 object DatosDemo {
@@ -56,23 +54,29 @@ object DatosDemo {
             Repartidor("Martín Silva", "+56 9 4444 4444", "Sur", 2.0)
         )
 
-        return Pizzeria(catalogo.listar(), inventario, repartidores)
-    }
+        val pizzeria: Pizzeria = Pizzeria(catalogo.listar(), inventario, repartidores)
 
-    // Pedido de demostracion construido directamente para no alterar el inventario.
-    fun crearPedido(pizzeria: Pizzeria): Pedido {
-        val cliente: Cliente = Cliente(
-            "Cliente Demo",
-            "+56 9 1234 5678",
-            "cliente@demo.com",
-            "Centro"
+        // Clientes de demostración registrados en la fuente única.
+        val clientes: List<Cliente> = listOf(
+            Cliente("Ana Pérez", "+56 9 5555 1111", "ana.perez@demo.com", "Centro"),
+            Cliente("Bruno Díaz", "+56 9 5555 2222", "bruno.diaz@demo.com", "Norte"),
+            Cliente("Carla Muñoz", "+56 9 5555 3333", "carla.munoz@demo.com", "Sur"),
+            Cliente("Diego Rojas", "+56 9 5555 4444", "diego.rojas@demo.com", "Centro")
+        )
+        clientes.forEach { pizzeria.registrarCliente(it) }
+
+        // Pedidos de demostración registrados (no sueltos) para que el resumen tenga datos reales.
+        pizzeria.registrarPedido(
+            clientes[0],
+            listOf(ItemPedido(pizzeria.productos.first(), 1)),
+            "Pedido demo 1"
+        )
+        pizzeria.registrarPedido(
+            clientes[1],
+            listOf(ItemPedido(pizzeria.productos[1], 1)),
+            "Pedido demo 2"
         )
 
-        return Pedido(
-            id = SecuenciaPedidos.siguiente(),
-            cliente = cliente,
-            itemsIniciales = listOf(ItemPedido(pizzeria.productos.first(), 2)),
-            notas = "Pedido de demostración"
-        )
+        return pizzeria
     }
 }

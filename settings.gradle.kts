@@ -23,4 +23,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "PizzeriaApp"
-include(":app")
+include(":app", ":utilidades", ":datos", ":ui")

@@ -6,8 +6,8 @@ import com.duoc.pizzeriaapp.modelo.ItemPedido
 import com.duoc.pizzeriaapp.modelo.Pedido
 import com.duoc.pizzeriaapp.modelo.Producto
 import com.duoc.pizzeriaapp.modelo.Repartidor
+import com.duoc.pizzeriaapp.datos.detallarProducto
 import com.duoc.pizzeriaapp.utils.SecuenciaPedidos
-import com.duoc.pizzeriaapp.utils.detallarProducto
 import com.duoc.pizzeriaapp.utils.formatearMonto
 import java.time.LocalDate
 
@@ -99,6 +99,9 @@ class Pizzeria(
     }
 
     fun listarPedidos(): List<Pedido> = pedidos.toList()
+
+    // Espejo de listarPedidos: expone los clientes registrados para la UI.
+    fun listarClientes(): List<Cliente> = clientes.toList()
 
     fun obtenerPedido(indice: Int): Pedido? = pedidos.getOrNull(indice)
 

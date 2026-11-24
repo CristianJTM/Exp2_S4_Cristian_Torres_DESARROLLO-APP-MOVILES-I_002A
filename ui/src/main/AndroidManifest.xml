@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Manifest mínimo de la library :ui; el namespace se define en build.gradle.kts. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />

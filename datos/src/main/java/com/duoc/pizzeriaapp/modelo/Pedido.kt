@@ -7,7 +7,7 @@ import com.duoc.pizzeriaapp.utils.calcularDescuento as calcularDescuentoUtil
 import com.duoc.pizzeriaapp.utils.calcularDescuentoPromocional as calcularDescuentoPromocionalUtil
 import com.duoc.pizzeriaapp.utils.calcularImpuesto as calcularImpuestoUtil
 import com.duoc.pizzeriaapp.utils.calcularPorcentajeDescuento
-import com.duoc.pizzeriaapp.utils.calcularSubtotal as calcularSubtotalUtil
+import com.duoc.pizzeriaapp.datos.calcularSubtotal as calcularSubtotalUtil
 import com.duoc.pizzeriaapp.utils.calcularTotal as calcularTotalUtil
 import com.duoc.pizzeriaapp.utils.estaEnPeriodoPromocional
 import com.duoc.pizzeriaapp.utils.formatearMonto
