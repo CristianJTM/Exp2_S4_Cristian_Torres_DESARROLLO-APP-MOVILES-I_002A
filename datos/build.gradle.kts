@@ -11,4 +11,6 @@ kotlin {
 dependencies {
     implementation(project(":utilidades"))
     implementation(libs.kotlinx.coroutines.core)
+
+    testImplementation(libs.junit)
 }
